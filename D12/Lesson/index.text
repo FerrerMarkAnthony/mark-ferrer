@@ -1,0 +1,185 @@
+Creating Authors Collection
+
+[
+  { "name": "John Doe", "email": "johndoe@example.com" },
+  { "name": "Jane Smith", "email": "janesmith@example.com" },
+  { "name": "Alice Johnson", "email": "alicej@example.com" }
+]
+
+
+{
+  _id: ObjectId('673dc366666e458d79b0582a'),
+  name: 'John Doe',
+  email: 'johndoe@example.com'
+}
+{
+  _id: ObjectId('673dc366666e458d79b0582b'),
+  name: 'Jane Smith',
+  email: 'janesmith@example.com'
+}
+{
+  _id: ObjectId('673dc366666e458d79b0582c'),
+  name: 'Alice Johnson',
+  email: 'alicej@example.com'
+}
+
+
+[
+  {
+    "title": "Introduction to MongoDB",
+    "content": "MongoDB is a NoSQL database...",
+    "author": { "$oid": "673dc366666e458d79b0582a" }
+  },
+  {
+    "title": "Schema Design Best Practices",
+    "content": "Embedding vs referencing...",
+    "author": { "$oid": "673dc366666e458d79b0582b" }
+  }
+]
+
+
+1) Find all posts by an author
+
+db.blog_posts.find({
+  author: ObjectId("673dc366666e458d79b0582a")
+})
+
+2) Find all post and include the authors name (join equivalent)
+
+db.blog_posts.aggregate([
+  {
+    $lookup: {
+      from: "authors",
+      localField: "author",
+      foreignField: "_id",
+      as: "author_details"
+    }
+  }
+])
+
+
+3) Count the number of posts per author
+
+db.blog_posts.aggregate([
+  { $group: { _id: "$author", postCount: { $sum: 1 } } }
+])
+
+$group groups documents by the author field.
+$sum calculates the total number of posts
+
+
+Scenario 2: Product Catalog
+
+Embedding
+
+Products (Product Collection)
+reviews within the product documents
+
+
+[
+  {
+    "name": "Smartphone",
+    "description": "High-performance device",
+    "reviews": [
+      { "rating": 5, "comment": "Excellent!", "reviewer": "John Doe" },
+      { "rating": 4, "comment": "Good value.", "reviewer": "Jane Smith" }
+    ]
+  },
+  {
+    "name": "Laptop",
+    "description": "Lightweight and powerful",
+    "reviews": [
+      { "rating": 5, "comment": "Amazing performance!", "reviewer": "Alice Johnson" },
+      { "rating": 3, "comment": "Could be better.", "reviewer": "John Doe" }
+    ]
+  }
+]
+
+1. Find all products with reviews rated 5
+db.products.find({ "reviews.rating": 5})
+
+2. Find all reviews for a specific product
+db.products.find({ name: "Smartphone" }, { reviews: 1 })
+
+3. Count the number of reviews per product
+db.products.aggregate([
+  { $unwind: "$reviews" },
+  { 
+    $group: {
+      _id: "$name", 
+      reviewCount: { $sum: 1 }
+    }
+  }
+])
+
+
+when do we use embedded and reference
+
+Scenario 3: Social Network
+
+- Users connect with each other as friends.
+- Friend relationship are bidirectional 
+
+[
+  {
+    "name": "John Doe",
+    "friends": [
+      { "$oid": "USER_ID_2" },
+      { "$oid": "USER_ID_3" }
+    ]
+  },
+  {
+    "name": "Jane Smith",
+    "friends": [
+      { "$oid": "USER_ID_1" }
+    ]
+  },
+  {
+    "name": "Alice Johnson",
+    "friends": [
+      { "$oid": "USER_ID_1" }
+    ]
+  }
+]
+
+
+673dcef7666e458d79b05862 - john doe
+673dcf09666e458d79b05864 - jane
+673dcf16666e458d79b05866 - alice
+
+db.Users.updateOne(
+  { _id: ObjectId("673dcef7666e458d79b05862") },
+  { $set: { friends: [ObjectId("673dcf09666e458d79b05864"), ObjectId("673dcf16666e458d79b05866")] } }
+);
+
+db.Users.updateOne(
+  { _id: ObjectId("673dcf09666e458d79b05864") },
+  { $set: { friends: [ObjectId("673dcef7666e458d79b05862")] } }
+);
+
+db.Users.updateOne(
+  { _id: ObjectId("673dcf16666e458d79b05866") },
+  { $set: { friends: [ObjectId("673dcef7666e458d79b05862")] } }
+);
+
+
+1. Find All friends of a Users
+db.Users.find({_id: ObjectId("673dcef7666e458d79b05862")}, {friends: 1})
+
+
+
+db.Users.find({_id: ObjectId("673dce6f954f8b5304c356db")}, { friends: 1})
+
+
+db.users.aggregate([
+  { $project: { name: 1, friendCount: { $size: "$friends" } } }
+])
+
+
+db.users.aggregate([
+  { $match: { _id: { $in: [ObjectId("673dcf09666e458d79b05864"), ObjectId("673dcf16666e458d79b05866")] } } },
+  { $project: { friends: 1 } }
+])
+
+
+

@@ -1,0 +1,40 @@
+A.) db.books.insertMany([
+    {
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        genre: "Fiction",
+        publicationYear: 1988
+    },
+    {
+        title: "Atomic Habits",
+        author: "James Clear",
+        genre: "Self-help",
+        publicationYear: 2018
+    },
+    {
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        genre: "Classic",
+        publicationYear: 1960
+    }
+    ]);
+
+B.) db.books.find();
+    db.books.find({ title: "The Alchemist" }) 
+    db.books.find({ author: "Paulo Coelho" })
+
+
+
+C.)  db.books.updateOne(
+        { title: "The Alchemist" }, // Filter
+        { $set: { genre: "Philosophical Fiction" } } 
+    );
+
+    db.books.updateOne(
+        { title: "The Alchemist" }, 
+        { $set: { publicationYear: 1993 } } 
+    );
+
+
+D.) db.books.deleteOne({ title: "The Alchemist" });
+    db.books.deleteOne({ author: "Paulo Coelho" });
