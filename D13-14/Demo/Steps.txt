@@ -1,0 +1,24 @@
+1. cd to the folder target and npm init -y (Creating package.json)
+2. npm install express mongoose dotenv nodemon
+3. create a file touch app.js
+4. go to package.json create under scripts  "start": "node app.js", "dev": "nodemon app.js"
+5. create touch .env
+6. mkdir : routes / controllers / models
+
+
+Model => 
+
+
+Actual endpoints for managing the TODO items in the API
+
+1) Create a new todo item:
+    Endpoint: POST /todos
+2) Retrieve all todo items:
+    Endpoint: GET /todos
+3) Retrieve specific todo items:
+    Endpoint: GET /todos/{id}
+4) Update a specific todo item:
+    Endpoint: PUT /todos/{id}
+5) Delete a specific todo item:
+    Endpoint: DELETE /todos/{id}
+

@@ -183,3 +183,56 @@ db.users.aggregate([
 
 
 
+Query Operators
+
+
+
+{ "price" {"$gt" : 100} }
+{ "tags": { "$in": ["kitchen", "furniture"] } }
+{ "status": "completed" }
+{ "_id": 1 }
+{ "customerId": 1 }
+
+
+Retrieve only the product names and prices
+
+db.products.find({}, {"name" : 1 , "_id":0 , "price" : 1})
+
+Step or Stages, last line will summarize
+Aggregation Pipelines
+
+
+Find the Total Quantity Ordered by each customer
+
+
+db.orders.aggregate([
+    {
+        $group: {
+            "_id" : "$customerId",
+            "totalQuantity" : {"$sum" : "$quantity"}
+        }
+    }
+])
+
+
+db.products.aggregate([
+    { "$group": { "_id": "$category", "averagePrice": { "$avg": "$price" } } }
+])
+
+
+Software
+
+Node JS
+Postman
+
+
+1 ecosystem the fullstack
+Monolithic
+PHP and MySQL
+Laravel
+
+Decoupled
+Backend and frontend
+
+
+
