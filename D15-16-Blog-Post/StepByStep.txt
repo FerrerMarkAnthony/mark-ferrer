@@ -1,0 +1,39 @@
+1. npm init -y
+2. npm install express
+3. npm Mongoose
+4. npm install bcryptjs
+5. Npm install jsonwebtoken
+6. npm install dotenv
+7. npm install nodemon
+8. touch .env inside the env
+9. package.json create start and dev
+---
+PORT=3000
+MONGODB_URI=<your MongoDB Atlas connection string>
+JWT_SECRET=<your JWT secret key>
+---
+
+9. create server.js
+---
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+app.use(express.json());
+require('dotenv').config();
+
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  }
+};
+
+// Start the server
+const port = process.env.PORT || 3000;
+app.listen(port, ()=>{
+    console.log(`Server is running in port ${port}`)
+    connectToDatabase();
+});
+---
