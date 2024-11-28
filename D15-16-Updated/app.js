@@ -15,6 +15,7 @@ app.use(express.json());
 // Import Routes
 import authRoutes from "./routes/authRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 
 // MongoDB connection
 const connectToDatabase = async () => {
@@ -29,6 +30,7 @@ const connectToDatabase = async () => {
 // Routs
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/comments", commentRoutes);
 
 // Start the server
 const port = process.env.PORT || 3000;
