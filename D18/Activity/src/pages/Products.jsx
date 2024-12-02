@@ -47,6 +47,7 @@ const Products = () => {
 
   // Open modal with product details
   const handleShowModal = (product) => {
+    console.log("Selected Product:", product);
     setSelectedProduct(product);
     setShowModal(true);
   };
